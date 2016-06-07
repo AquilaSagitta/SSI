@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deadlayer.com</title>
+  <style>
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background-color: #222222;
+    }
+
+    .my-splash {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      animation: fadeIn .5s;
+    }
+
+    .my-splash h1 {
+      background: url('assets/gears.svg') no-repeat center center;
+      padding: 1em;
+      text-shadow: -1px -1px 0 #222222,
+      1px -1px 0 #222222,
+      -1px 1px 0 #222222,
+      1px 1px 0 #222222;
+      font-size: 39px;
+      margin-top: 21px;
+      margin-bottom: 10.5px;
+      font-family: Helvetica, Arial, sans-serif;
+      line-height: 1.42857143;
+      color: #ffffff;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Begin-Splash-Screen -->
+<div class="my-splash">
+  <h1>Loading</h1>
+  <script>
+    window.addEventListener('load', function init() {
+      //register this function with our module to run after apis return
+      ssi.queue(function() { //prevent popin
+        $ ( '.my-splash' ).hide ();
+        $ ( 'main' ).fadeIn ();
+      });
+    });
+  </script>
+</div>
+<!-- End-Splash-Screen -->
+
+<!-- Begin-Content -->
+<main class=".container-fluid" style="display:none">
+  <div class="row">
+    <div class="col-sm-2">
+      <div class="sidebar-nav">
+        <div class="navbar  navbar-default" role="navigation">
+          <div class="navbar-header"> <!-- NavBar Collapsed Header -->
+            <button type="button" class="navbar-toggle"
+                    data-toggle="collapse"
+                    data-target=".sidebar-navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <span class="visible-xs navbar-brand">Sidebar menu</span>
+          </div>
+          <div class="navbar-collapse  collapse  sidebar-navbar-collapse">
+            <ul class="nav  navbar-nav">
+              <li class="text-center"><h4>Links</h4></li>
+              <li><a href="https://plex.deadlayer.com/web">Plex</a></li>
+              <li><a href="http://plexpy.deadlayer.com">PlexPy</a></li>
+              <li><a href="http://plexreq.deadlayer.com">Plex Requests</a></li>
+              <li><a href="http://cp.deadlayer.com">CouchPotato</a></li>
+              <li><a href="http://sr.deadlayer.com">SickRage</a></li>
+              <li><a href="http://confluence.deadlayer.com">Confluence</a></li>
+              <li><a href="http://kibana.deadlayer.com">Kibana</a></li>
+              <li><a href="http://zabbix.deadlayer.com">Zabbix</a></li>
+            </ul>
+          </div>
+          <!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-10  text-center">
+      <header>
+        <div class="row">
+          <div class="col-sm-12  col-md-6  col-lg-4">
+            <h3 class="panel-title">CPU <small>Idle/1m/5m/15m</small></h3>
+            <div class="cpu-idle"></div>
+            <div>Load</div>
+            <span class="cpu-load1"></span>
+            <span> / </span>
+            <span class="cpu-load5"></span>
+            <span> / </span>
+            <span class="cpu-load15"></span>
+          </div>
+          <div class="col-sm-12  col-md-6  col-lg-4">
+            <h3 class="panel-title">
+              RAM <small>Available/Total</small></h3>
+            <div class="progress">
+              <div class="progress-bar  ram-progress" role="progressbar"
+                   style="width:100%">
+                <span class="ram-avail"></span>
+                <span> / </span>
+                <span class="ram-total"></span>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12  col-md-6  col-lg-4">
+            <h3 class="panel-title">
+              Disk <small>free/free%/used/total</small></h3>
+            <div>
+              <span class="disk-free"></span>
+              <span> / </span>
+              <span class="disk-freep"></span>
+            </div>
+            <div class="disk-used"></div>
+            <div class="disk-total"></div>
+          </div>
+        </div>
+      </header>
+      <section>
+        <div class="graph-1"></div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('load', function() {
+      ssi.queue(format);
+    });
+    setInterval(function() { ssi.queue(format); }, 900000);
+
+    function format() {
+      $('.ram-avail').html(Math.round((ssi.memAvail.lastvalue/1000000000)*100)/100
+                           + ' GB');
+      $('.ram-total').html(Math.round((ssi.memTotal.lastvalue/1000000000)*100)/100
+                           + ' GB');
+      $('.ram-progress' ).css('width', (1-(ssi.memAvail.lastvalue /
+                                           ssi.memTotal.lastvalue))*100 +
+                                       '%');
+      $('.cpu-idle' ).html('Idle: ' + Math.round(ssi.cpuIdle.lastvalue) +
+                           ssi.cpuIdle.units);
+      $('.cpu-load1' ).html(Math.round(ssi.cpuLoad60.lastvalue*100) +
+                                       '%');
+      $('.cpu-load5' ).html(Math.round(ssi.cpuLoad300.lastvalue*100) +
+                            '%');
+      $('.cpu-load15' ).html(Math.round(ssi.cpuLoad900.lastvalue*100) +
+                             '%');
+      $('.disk-free' ).html(Math.round((ssi.diskFree.lastvalue/1000000000)*100)/100
+                            + ' GB');
+      $('.disk-freep' ).html(Math.round(ssi.diskFreeP.lastvalue) + '%');
+      $('.disk-used' ).html(Math.round((ssi.diskUsed.lastvalue/1000000000)*100)/100 + ' GB');
+      $('.disk-total' ).html(Math.round((ssi.diskTotal.lastvalue/1000000000)*100)/100 + ' GB');
+      $('.graph-1').css('background',
+                        'url("http://deadlayer.com:1180/chart2.php?graphid=670&period=86400") no-repeat center center');
+      $('.graph-1').css('background-size','contain');
+    }
+  </script>
+</main>
+<!-- End-Content -->
+
+<!-- Begin-Libraries -->
+<script
+  src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js">
+</script>
+<script
+  src="//cdnjs.cloudflare.com/ajax/libs/tether/1.3.1/js/tether.min.js">
+</script>
+<link rel="stylesheet"
+      href="https://bootswatch.com/darkly/bootstrap.min.css"
+      crossorigin="anonymous">
+<script
+  src="https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/js/bootstrap.js"
+        crossorigin="anonymous"></script>
+<!-- End-Libraries -->
+
+<!-- Begin-App -->
+<link rel="stylesheet" href="css/index.css" crossorigin="anonymous">
+<script src="js/index.js"></script>
+<!-- End-App -->
+
+</body>
+</html>

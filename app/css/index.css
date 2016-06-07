@@ -1,0 +1,50 @@
+header {
+    border-bottom: solid thick white;
+    padding: 3rem;
+}
+li {
+    border-bottom: solid thin white;
+}
+.graph-1 {
+    height: 376px;
+    background-size:contain;
+}
+
+.progress {
+    height:22px;
+    margin:0;
+}
+
+.progress .progress-bar {
+    font-size: 15px !important;
+    line-height: 1.42857143 !important;
+}
+.ram-progress {
+    /*!* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#3df230+0,ffff00+60,ff0004+90 *!
+    background: #3df230; !* Old browsers *!
+    background: -moz-linear-gradient(left,  #3df230 0%, #ffff00 60%, #ff0004 90%); !* FF3.6-15 *!
+    background: -webkit-linear-gradient(left,  #3df230 0%,#ffff00 60%,#ff0004 90%); !* Chrome10-25,Safari5.1-6 *!
+    background: linear-gradient(to right,  #3df230 0%,#ffff00 60%,#ff0004 90%); !* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ *!
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3df230', endColorstr='#ff0004',GradientType=1 ); !* IE6-9 *!
+    overflow-x: visible;*/
+}
+
+/* make sidebar nav vertical */
+@media (min-width: 768px) {
+    .sidebar-nav .navbar .navbar-collapse {
+        padding: 0;
+        max-height: none;
+    }
+    .sidebar-nav .navbar ul {
+        float: none;
+        display: block;
+    }
+    .sidebar-nav .navbar li {
+        float: none;
+        display: block;
+    }
+    .sidebar-nav .navbar li a {
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+}
