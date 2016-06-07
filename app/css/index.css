@@ -19,6 +19,11 @@ li {
     font-size: 15px !important;
     line-height: 1.42857143 !important;
 }
+
+.my-item {
+    margin: 3rem 0;
+}
+
 .ram-progress {
     /*!* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#3df230+0,ffff00+60,ff0004+90 *!
     background: #3df230; !* Old browsers *!

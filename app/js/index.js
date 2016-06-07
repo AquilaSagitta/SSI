@@ -10,7 +10,8 @@ var ssi = (function($){
   };
   myQueue = [];
   si.config = {
-    apiUrl: 'http://zabbix.deadlayer.com:1180/api_jsonrpc.php',
+    hostUrl: 'http://zabbix.deadlayer.com',
+    apiUrl: '/api_jsonrpc.php',
     token: null,
     user: 'Aquila',
     pass: 'Aquila',
@@ -34,7 +35,25 @@ var ssi = (function($){
   //////////
 
   /* Public */
+  function queue(func) { // use to run code after api's return
+    myQueue.push(func);
+  }
 
+  function update() {
+    getItems()
+      .then(function(data) {
+        data = data.result;
+        while(data.length) { // faster then for loop
+          var val = data.pop(); // we don't care about array after were done
+          if(si.config.itemMap.hasOwnProperty(val.itemid)) {
+            si[si.config.itemMap[val.itemid]] = val; // make items human readable
+          }
+        }
+        runQueue();
+      }, function(error) {
+        console.log(error);
+      })
+  }
 
   /* Private */
   function init() {
@@ -50,9 +69,9 @@ var ssi = (function($){
   }
 
   // most of our api calls are the same. Wrapper to change just what we need
-  function apiCall(_url_, _method_, _data_, callback) {
+  function apiCall(_method_, _data_, callback) {
     return $.ajax({
-                    url: _url_,
+                    url: si.config.hostUrl + si.config.apiUrl,
                     method: _method_,
                     data: JSON.stringify(_data_), // zabbix doesn't take
                     // real json so we need to convert it to string
@@ -77,7 +96,7 @@ var ssi = (function($){
       "auth": null
     };
 
-    return apiCall(si.config.apiUrl, 'POST', request, function(data) {
+    return apiCall('POST', request, function(data) {
       console.log('Api call getZabbixAuthToken returned: '
                   + JSON.stringify(data));
       return data;
@@ -102,31 +121,11 @@ var ssi = (function($){
     };
 
     // use wrapper function to make ajax call
-    return apiCall(si.config.apiUrl, 'POST', request, function(data) {
+    return apiCall('POST', request, function(data) {
       console.log('Api call getItems returned: '
                   + JSON.stringify(data));
       return data;
     });
-  }
-
-  function update() {
-    getItems()
-      .then(function(data) {
-        data = data.result;
-        while(data.length) { // faster then for loop
-          var val = data.pop(); // we don't care about array after were done
-          if(si.config.itemMap.hasOwnProperty(val.itemid)) {
-            si[si.config.itemMap[val.itemid]] = val; // make items human readable
-          }
-        }
-        runQueue();
-      }, function(error) {
-        console.log(error);
-      })
-  }
-
-  function queue(func) {
-    myQueue.push(func);
   }
 
   function runQueue() {
